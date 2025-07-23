@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth_cookie_name' => env('AUTH_JWT_COOKIE_NAME', 'auth_jwt_token'),
 
     /*
     |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'api'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -40,6 +41,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ]
     ],
 
     /*
