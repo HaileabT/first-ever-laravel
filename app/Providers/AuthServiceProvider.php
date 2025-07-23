@@ -2,17 +2,18 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    public static $authCookieName;
+    public static $authTokenName;
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->app->register(\Tymon\JWTAuth\Providers\LaravelServiceProvider::class);
+        // $this->app->register(\Tymon\JWTAuth\Providers\LaravelServiceProvider::class);
     }
 
     /**
@@ -20,6 +21,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        AuthServiceProvider::$authCookieName = config('auth.auth_cookie_name');
+        AuthServiceProvider::$authTokenName = config('auth.auth_token_name', "auth_token");
     }
 }

@@ -23,13 +23,13 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $token = $request->cookie(AuthServiceProvider::$authCookieName);
+            $token = $request->cookie(AuthServiceProvider::$authTokenName);
             $user = JWTAuth::setToken($token)->authenticate();
             Log::info($user);
 
 
             if (!$user) {
-                return response()->errorResponse('User does not exist.', 'fail', 404);
+                return response()->errorResponse('User does not exist.', 'fail', 401);
             }
             $request->merge(['user' => $user]);
             return $next($request);

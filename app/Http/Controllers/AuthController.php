@@ -26,8 +26,9 @@ class AuthController extends Controller
             $validated['password'] = Hash::make($validated['password']);
 
             $user = User::create($validated);
-            $token = Auth::fromUser($user);
-            return response()->json($user)->cookie(AuthServiceProvider::$authCookieName, $token, 60 * 60 * 24, '/api', false, true, true);
+            $token = $user->createToken(AuthServiceProvider::$authTokenName)->plainTextToken;
+            Log::info($token);
+            // return response()->json($user)->cookie(AuthServiceProvider::$authCookieName, $token, 60 * 60 * 24, '/api', false, true, true);
         } catch (ValidationException $e) {
             Log::error($e);
 
@@ -48,13 +49,15 @@ class AuthController extends Controller
             Log::info($validated);
 
             $user = User::where('username', $validated['username'])->first();
-            $token  = Auth::attempt($validated);
-            Log::info($user);
+            Log::info(AuthServiceProvider::$authTokenName);
+            $token = $user->createToken(AuthServiceProvider::$authTokenName)->plainTextToken;
+            // $token  = Auth::attempt($validated);
+            Log::info($token);
 
             if (!$user) {
                 throw new Exception("Username or password invalid.");
             }
-            return response()->json(['user' => $user])->cookie(AuthServiceProvider::$authCookieName, $token, 60 * 24, '/api', false, false, true);;
+            return response()->json(['user' => $user])->cookie(AuthServiceProvider::$authTokenName, $token, 60 * 24, '/api', false, false, true);;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->errorResponse();
@@ -63,7 +66,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        return response(["status" => "successful"], 200)->withCookie(Cookie::forget(AuthServiceProvider::$authCookieName, '/api', null));
+        $request->user()->currentAccessToken()->delete();
+        return response(["status" => "successful"], 200);
     }
 
     public function me(Request $request)

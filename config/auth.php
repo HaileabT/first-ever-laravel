@@ -2,6 +2,7 @@
 
 return [
     'auth_cookie_name' => env('AUTH_JWT_COOKIE_NAME', 'auth_jwt_token'),
+    'auth_token_name' => env('AUTH_TOKEN_NAME', 'auth_token'),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,6 +45,10 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+        ],
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users'
         ]
     ],
 

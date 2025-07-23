@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::middleware('auth.identify')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/api/auth/login', fn() => response()->json(['message' => 'Unauthenticated'], 401))->name('login');
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/{id}', [AuthController::class, 'me']);
+        Route::get('/me', [AuthController::class, 'me']);
     });
 });
 
@@ -19,17 +20,15 @@ Route::prefix('auth')->group(function () {
 Route::prefix('book')->group(function () {
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{id}', [BookController::class, 'show']);
-    Route::middleware("auth.identify")->group(function () {
+    Route::middleware("auth:sanctum")->group(function () {
         Route::post('/', [BookController::class, 'store']);
-        Route::middleware('auth.role:author')->group(function () {
-            Route::put('/{id}', [BookController::class, 'update']);
-            Route::delete('/{id}', [BookController::class, 'destroy']);
-        });
+        Route::put('/{id}', [BookController::class, 'update']);
+        Route::delete('/{id}', [BookController::class, 'destroy']);
     });
 });
 
 
-Route::prefix('user')->middleware(['auth.identify', 'auth.role:admin'])->group(function () {
+Route::prefix('user')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
     Route::get('/{id}', [UserController::class, 'show']);
