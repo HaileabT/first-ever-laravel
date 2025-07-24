@@ -31,7 +31,7 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             Log::error($e);
 
-            return response()->errorResponse('Bad registerion data' . $e->getMessage(), 'fail', 402);
+            return response()->errorResponse('Bad registerion data' . $e->getMessage(), 'fail', 400);
         } catch (Exception $e) {
             return response()->errorResponse();
         }

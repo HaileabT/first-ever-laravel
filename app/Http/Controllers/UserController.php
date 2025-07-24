@@ -33,7 +33,7 @@ class UserController extends Controller
         } catch (ValidationException $e) {
             Log::error($e);
 
-            return response()->errorResponse('Bad register request' . $e->getMessage(), 'fail', 402);
+            return response()->errorResponse('Bad register request' . $e->getMessage(), 'fail', 400);
         } catch (Exception $e) {
             return response()->errorResponse();
             Log::error("Something went wrong: " . $e->getMessage());
