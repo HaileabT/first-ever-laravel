@@ -32,7 +32,7 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             Log::error($e);
 
-            return response()->errorResponse('Bad registerion data' . $e->getMessage(), 'fail', 402);
+            return response()->errorResponse('Bad registerion data' . $e->getMessage(), 'fail', 400);
         } catch (Exception $e) {
             return response()->errorResponse();
         }
@@ -49,8 +49,8 @@ class AuthController extends Controller
             Log::info($validated);
 
             $user = User::where('username', $validated['username'])->first();
-            Log::info(AuthServiceProvider::$authTokenName);
             $token = $user->createToken(AuthServiceProvider::$authTokenName)->plainTextToken;
+            Log::info(AuthServiceProvider::$authTokenName);
             // $token  = Auth::attempt($validated);
             Log::info($token);
 
