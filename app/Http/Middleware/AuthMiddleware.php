@@ -34,7 +34,7 @@ class AuthMiddleware
             $request->merge(['user' => $user]);
             return $next($request);
         } catch (TokenInvalidException | TokenExpiredException $e) {
-            return response()->errorResponse('User not logged in.', 'fail', 403);
+            return response()->errorResponse('User not logged in.', 'fail', 401);
         } catch (Exception $e) {
             return response()->errorResponse();
         }
